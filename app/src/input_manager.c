@@ -559,13 +559,15 @@ sc_input_manager_process_mouse_motion(struct sc_input_manager *im,
         // simulated from touch events, so it's a duplicate
         return;
     }
-
+    
+    bool positionDirect = event->which == SDL_POSITION_DIRECT;
+    // printf("RelativeX: %d, RelativeY: %d   ", event->xrel, event->yrel);
+    // struct sc_point physicalPoint = sc_screen_convert_window_to_frame_coords(im->screen, event->x, event->y);
+    // printf("physicalX: %d, physicalY: %d\n", physicalPoint.x, physicalPoint.y);
     struct sc_mouse_motion_event evt = {
         .position = {
             .screen_size = im->screen->frame_size,
-            .point = sc_screen_convert_window_to_frame_coords(im->screen,
-                                                              event->x,
-                                                              event->y),
+            .point = positionDirect ? (struct sc_point){event->x, event->y} : sc_screen_convert_window_to_frame_coords(im->screen, event->x, event->y),
         },
         .pointer_id = im->forward_all_clicks ? POINTER_ID_MOUSE
                                              : POINTER_ID_GENERIC_FINGER,
@@ -633,6 +635,8 @@ sc_input_manager_process_mouse_button(struct sc_input_manager *im,
     }
 
     bool down = event->type == SDL_MOUSEBUTTONDOWN;
+    bool positionDirect = event->which == SDL_POSITION_DIRECT;
+
     if (!im->forward_all_clicks) {
         if (controller) {
             enum sc_action action = down ? SC_ACTION_DOWN : SC_ACTION_UP;
@@ -658,7 +662,9 @@ sc_input_manager_process_mouse_button(struct sc_input_manager *im,
                 return;
             }
         }
-
+        
+        struct sc_point physicalPoint = positionDirect ? (struct sc_point){event->x, event->y} : sc_screen_convert_window_to_frame_coords(im->screen, event->x, event->y);
+        printf("physicalX: %d, physicalY: %d\n", physicalPoint.x, physicalPoint.y);
         // double-click on black borders resize to fit the device screen
         if (event->button == SDL_BUTTON_LEFT && event->clicks == 2) {
             int32_t x = event->x;
@@ -686,9 +692,7 @@ sc_input_manager_process_mouse_button(struct sc_input_manager *im,
     struct sc_mouse_click_event evt = {
         .position = {
             .screen_size = im->screen->frame_size,
-            .point = sc_screen_convert_window_to_frame_coords(im->screen,
-                                                              event->x,
-                                                              event->y),
+            .point = positionDirect ? (struct sc_point){event->x, event->y} : sc_screen_convert_window_to_frame_coords(im->screen, event->x, event->y),
         },
         .action = sc_action_from_sdl_mousebutton_type(event->type),
         .button = sc_mouse_button_from_sdl(event->button),
@@ -817,6 +821,7 @@ sc_input_manager_handle_event(struct sc_input_manager *im,
             if (!control) {
                 break;
             }
+            // printf("SDL_MOUSE_MOTION\n");
             sc_input_manager_process_mouse_motion(im, &event->motion);
             break;
         case SDL_MOUSEWHEEL:
@@ -829,6 +834,7 @@ sc_input_manager_handle_event(struct sc_input_manager *im,
         case SDL_MOUSEBUTTONUP:
             // some mouse events do not interact with the device, so process
             // the event even if control is disabled
+            // printf("SDL_MOUSE_BUTTON_UP/DOWN\n");
             sc_input_manager_process_mouse_button(im, &event->button);
             break;
         case SDL_FINGERMOTION:

@@ -42,6 +42,9 @@
  * server) or to an HID event (to be sent over USB/AOA directly).
  */
 
+
+#define SDL_POSITION_DIRECT ((Uint32)-8)
+
 enum sc_mod {
     SC_MOD_LSHIFT = KMOD_LSHIFT,
     SC_MOD_RSHIFT = KMOD_RSHIFT,

@@ -28,6 +28,7 @@ src = [
     'src/receiver.c',
     'src/recorder.c',
     'src/scrcpy.c',
+    'src/remote_input_inject.c',
     'src/screen.c',
     'src/server.c',
     'src/version.c',

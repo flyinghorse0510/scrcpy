@@ -12,7 +12,7 @@
 # include <winsock2.h>
 # include <windows.h>
 #endif
-
+#include <pthread.h>
 #include "audio_player.h"
 #include "controller.h"
 #include "decoder.h"
@@ -25,6 +25,7 @@
 #include "recorder.h"
 #include "screen.h"
 #include "server.h"
+#include "remote_input_inject.h"
 #ifdef HAVE_USB
 # include "usb/aoa_hid.h"
 # include "usb/hid_keyboard.h"
@@ -162,6 +163,11 @@ sdl_configure(bool video_playback, bool disable_screensaver) {
 static enum scrcpy_exit_code
 event_loop(struct scrcpy *s) {
     SDL_Event event;
+    // Start remote injection thread
+    printf("Starting remote injection thread...\n");
+    pthread_t remoteInjectionThread;
+    int ret = pthread_create(&remoteInjectionThread, NULL, remote_inject_thread, NULL);
+
     while (SDL_WaitEvent(&event)) {
         switch (event.type) {
             case SC_EVENT_DEVICE_DISCONNECTED:
@@ -186,6 +192,10 @@ event_loop(struct scrcpy *s) {
                 break;
         }
     }
+
+    printf("Waiting for remote injection thread to be terminated...\n");
+    pthread_cancel(remoteInjectionThread);
+
     return SCRCPY_EXIT_FAILURE;
 }
 
