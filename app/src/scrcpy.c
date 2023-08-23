@@ -164,9 +164,9 @@ static enum scrcpy_exit_code
 event_loop(struct scrcpy *s) {
     SDL_Event event;
     // Start remote injection thread
-    printf("Starting remote injection thread...\n");
-    pthread_t remoteInjectionThread;
-    int ret = pthread_create(&remoteInjectionThread, NULL, remote_inject_thread, NULL);
+    // printf("Starting remote injection thread...\n");
+    // pthread_t remoteInjectionThread;
+    // pthread_create(&remoteInjectionThread, NULL, remote_inject_thread, NULL);
 
     while (SDL_WaitEvent(&event)) {
         switch (event.type) {
@@ -193,8 +193,8 @@ event_loop(struct scrcpy *s) {
         }
     }
 
-    printf("Waiting for remote injection thread to be terminated...\n");
-    pthread_cancel(remoteInjectionThread);
+    // printf("Waiting for remote injection thread to be terminated...\n");
+    // pthread_cancel(remoteInjectionThread);
 
     return SCRCPY_EXIT_FAILURE;
 }

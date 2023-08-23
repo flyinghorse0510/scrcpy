@@ -1,2 +1,2 @@
 #!/bin/bash
-./run x --no-audio --stay-awake -b 20M --max-fps=5 --tcpip=192.168.0.17 --v4l2-sink=/dev/video0
+./run x --no-audio --serial=R5CW32HGLJD --stay-awake -b 30M --max-fps=30 --v4l2-sink=/dev/video0
