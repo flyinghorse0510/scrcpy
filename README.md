@@ -1,11 +1,11 @@
-# scrcpy (v2.1)
+# scrcpy (v2.1.1)
 
 <img src="app/data/icon.svg" width="128" height="128" alt="scrcpy" align="right" />
 
 _pronounced "**scr**een **c**o**py**"_
 
 This application mirrors Android devices (video and audio) connected via
-USB or [over TCP/IP](doc/device.md#tcpip-wireless), and allows to control the
+USB or [over TCP/IP](doc/connection.md#tcpip-wireless), and allows to control the
 device with the keyboard and the mouse of the computer. It does not require any
 _root_ access. It works on _Linux_, _Windows_ and _macOS_.
 
@@ -68,10 +68,11 @@ mode](doc/hid-otg.md#otg).
 The application provides a lot of features and configuration options. They are
 documented in the following pages:
 
- - [Device](doc/device.md)
+ - [Connection](doc/connection.md)
  - [Video](doc/video.md)
  - [Audio](doc/audio.md)
  - [Control](doc/control.md)
+ - [Device](doc/device.md)
  - [Window](doc/window.md)
  - [Recording](doc/recording.md)
  - [Tunnels](doc/tunnels.md)
